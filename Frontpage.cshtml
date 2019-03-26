@@ -1,21 +1,45 @@
 ﻿@{
     Page.Title = "Autoquiz";
+
+    Validation.RequireField("Username", "Username is required");
+    Validation.Add("Username", Validator.StringLength(20, 4, "Username should be between 4 and 20 characters."));
+
+    if (IsPost && Validation.IsValid())
+    {
+        Response.Redirect("~/Index.cshtml");
+
+        Session["Username"] = Request.Form["Username"];
+    }
 }
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <title> @Page.Title </title>
+
 </head>
 <body>
-    <div class="container">
-        <h1> Welkom bij de Autoquiz! </h1> <br /> <br />
-        <input type="button" value="Play the quiz!" onclick="location.href='~/Index.cshtml';"> <br>
-        <input type="button" value="Leaderboards" onclick="location.href='~/Leaderboards.cshtml';"> <br>
-        <input type="button" value="Administrator Login" onclick="location.href='~/Admin.cshtml';"> <br>
+
+    <div class="container text-center">
+        <h1> Welkom bij de Autoquiz! </h1> <br> <br>
+
+        <form>
+            <p>
+                Gebruikersnaam:
+
+                <input type="text" name="gebruikersnaam" placeholder="Your username.." value="@Request.Form["Username"]">
+                @Html.ValidationMessage("Username")
+            </p>
+
+            <input type="submit" name="Playquiz" value="Speel de quiz!" /> <br> <br>
+        </form>
+
+        <input type="button" value="Scorebord" onclick="location.href='~/Leaderboards.cshtml';"> <br> <br>
+        <input type="button" value="Beheerder Login" onclick="location.href='~/Admin.cshtml';"> <br> <br> <br>
     </div>
 
 </body>

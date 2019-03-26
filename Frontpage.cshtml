@@ -1,3 +1,22 @@
 ﻿@{
-    
+    Page.Title = "Autoquiz";
 }
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title> @Page.Title </title>
+</head>
+<body>
+    <div class="container">
+        <h1> Welkom bij de Autoquiz! </h1> <br /> <br />
+        <input type="button" value="Play the quiz!" onclick="location.href='~/Index.cshtml';"> <br>
+        <input type="button" value="Leaderboards" onclick="location.href='~/Leaderboards.cshtml';"> <br>
+        <input type="button" value="Administrator Login" onclick="location.href='~/Admin.cshtml';"> <br>
+    </div>
+
+</body>
+</html>

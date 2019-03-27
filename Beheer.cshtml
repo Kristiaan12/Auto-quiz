@@ -1,0 +1,72 @@
+﻿@{
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+    string provider = "System.Data.SqlClient";
+    Database db = Database.OpenConnectionString(connectionString, provider);
+    var selectCommand = "SELECT * FROM Brand";
+    var searchTerm = "";
+
+    var brandCar = "";
+    var photoCar = "";
+    var niveauCar = "";
+
+    if (IsPost)
+    {
+        brandCar = Request.Form["Name"];
+        photoCar = Request.Form["Photo"];
+        niveauCar = Request.Form["Niveau"];
+
+
+        var insertCommand = "INSERT INTO Brand (Name, Photo, Niveau) Values(@0, @1, @2)";
+        db.Execute(insertCommand, brandCar, photoCar, niveauCar);
+        Response.Redirect("~/Beheer");
+
+
+    }
+
+
+    if (!Request.QueryString["searchCar"].IsEmpty())
+    {
+        selectCommand = "SELECT * FROM Brand WHERE Name = @0";
+        searchTerm = Request.QueryString["searchCar"];
+    } 
+
+    var selectedData = db.Query(selectCommand, searchTerm);
+    var grid = new WebGrid(source: selectedData, defaultSort: "Name", rowsPerPage: 10);
+}
+
+<form method="post">
+    <p>
+        <input class="form-control" type="text" name="Name" placeholder="Merk naam" value="@Request.Form["Name"]" />
+        <input class="form-control" type="text" name="Photo" placeholder="Foto url" value="@Request.Form["Photo"]" />
+        <select class="form-control" name="Niveau" value="@Request.Form["Niveau"]">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+        </select>
+        <input type="submit" name="buttonSubmit" value="Toevoegen" class="btn btn-block btn-lg btn-primary" />
+</form>
+
+
+<form method="get">
+    <div>
+        <label for="searchCar">Zoek op merk:</label>
+        <input type="text" name="searchCar" value="@Request.QueryString["searchCar"]" />
+        <input type="Submit" value="Zoek een merk" /><br />
+        <br />
+    </div>
+</form>
+
+<div>
+    @grid.GetHtml(
+     tableStyle: "grid",
+     headerStyle: "head",
+     alternatingRowStyle: "alt",
+     columns: grid.Columns(
+       grid.Column(format: @<a href="~/EditBrand?id=@item.Id">Wijzig</a>),
+                         grid.Column("Name"),
+            grid.Column("Photo"),
+            grid.Column("Niveau"),
+             grid.Column(format: @<a href="~/DeleteBrand?id=@item.Id">Verwijder</a>)
+                                   ))
+
+</div>

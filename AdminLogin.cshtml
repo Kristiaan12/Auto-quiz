@@ -1,0 +1,69 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "Administrator Login";
+
+    //Valideerd dat er een username en password wordt opgegeven.
+    Validation.RequireField("Name", "Administrator name cannot be empty.");
+    Validation.RequireField("Wachtwoord", "Password cannot be empty.");
+
+    //Maakt verbinding met de Database.
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+
+    string provider = "System.Data.SqlClient";
+
+    Database db = Database.OpenConnectionString(connectionString, provider);
+
+    if (IsPost && Validation.IsValid())
+    {
+        //als beide velden ingevuld zijn en komen in combinatie overeen met wat opgeslagen staat in de Database, stuurt hem door naar de Administrator pagina.
+
+        if (!Request.Form["Name"].IsEmpty() && !Request.Form["Wachtwoord"].IsEmpty() && db.Query("SELECT * FROM Admin WHERE Name = @0 AND Wachtwoord = @1", Request.Form["Name"], Request.Form["Wachtwoord"]).Any())
+        {
+            Response.Redirect("~/Beheer.cshtml");
+        }
+        else
+        {
+
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <title>@Page.Title</title>
+</head>
+
+<body>
+
+    <div class="container text-center">
+
+
+        <h1>@Page.Title</h1> <br>
+
+        <h2 class="content">Please provide your credentials.</h2> <br>
+
+        <form method="post" class="content">
+
+            <p> After Loging in you'll be able to Add, Edit and Delete questions, you'll also be able to see how many people have been on the site today.</p> <br>
+
+            <p> <label>Administrator Name</label> <br> <input type="text" name="name" placeholder="Administrator name.." value="@Request.Form["Name"]"> <br> </p>
+            @Html.ValidationMessage("Name") <br> <br>
+
+            <p> <label>Password</label> <br> <input type="password" name="wachtwoord" placeholder="Password.." value="@Request.Form["Wachtwoord"]"> <br> </p>
+            @Html.ValidationMessage("Wachtwoord") <br>
+
+            <p> <input type="submit" name="buttonLogin" value="Log in" /> </p>
+
+        </form>
+    </div>
+</body>
+</html> 

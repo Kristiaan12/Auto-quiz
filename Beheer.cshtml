@@ -5,9 +5,13 @@
     var selectCommand = "SELECT * FROM Brand";
     var searchTerm = "";
 
+ 
+
     var brandCar = "";
     var photoCar = "";
     var niveauCar = "";
+
+    
 
     if (IsPost)
     {
@@ -28,7 +32,7 @@
     {
         selectCommand = "SELECT * FROM Brand WHERE Name = @0";
         searchTerm = Request.QueryString["searchCar"];
-    } 
+    }
 
     var selectedData = db.Query(selectCommand, searchTerm);
     var grid = new WebGrid(source: selectedData, defaultSort: "Name", rowsPerPage: 10);

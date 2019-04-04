@@ -1,0 +1,30 @@
+﻿@{ 
+
+    Layout = "~/     ";
+    Page.Title = " ";
+
+    Validation.RequireField("  ", "  ");
+    Validation.RequireField("  ", "  ");
+
+
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+
+    string provider = "System.Data.SqlClient";
+
+    Database db = Database.OpenConnectionString(connectionString, provider);
+
+
+    if (IsPost && Validation.IsValid())
+    {
+
+        if (!Request.Form["Username"].IsEmpty() && !Request.Form["Password"].IsEmpty() && db.Query("SELECT * FROM ????? WHERE Username = @0 AND Password = @1", Request.Form["Username"], Request.Form["Password"]).Any())
+        {
+            Session["   "] = Request.Form["   "];
+
+            Response.Redirect("~/    .cshtml"); /*Add Directory*/
+
+            else{
+
+            }
+        }
+    }

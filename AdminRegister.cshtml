@@ -1,0 +1,34 @@
+﻿@using WebMatrix.Data
+@{
+    /**/
+
+    Page.Title = " "; /*INSERT NAAM HIER*/
+
+    Layout = "~/    "; /*INSERT LAYOUT NAAM HIER*/
+
+
+    Validation.RequireField("Username", "Enter A Username Here");
+    Validation.RequireField("Password", "Enter A Password Here");
+
+    var Username = "";
+    var Password = "";
+
+    if (IsPost && Validation.IsValid())
+
+    {
+        Username = Request.Form["Username"];
+        Password = Request.Form["Password"];
+
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True";
+        string provider = "System.Data.SqlClient";
+        Database db = Database.OpenConnectionString(connectionString, provider);
+
+        var insertCommand = "INSERT INTO ??? (Username, Password) Values(@0, @1,)";
+        db.Execute(insertCommand, Username, Password,);
+        Response.Redirect("~/"); /*AddDirectory*/
+    }
+
+
+
+
+}

@@ -1,0 +1,177 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "Autoquiz";
+
+    //Maakt verbinding met de Database.
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+
+    string provider = "System.Data.SqlClient";
+
+    Database db = Database.OpenConnectionString(connectionString, provider);
+
+    //Query om de scorelijst van vandaag op te halen.
+    var Todayquery = db.Query("SELECT * FROM Leaderboard WHERE Date = CONVERT(date, getdate()) ORDER BY score DESC");
+
+    //Query om de scorelijst van deze week op te halen.
+    var Weekquery = db.Query("SELECT * FROM Leaderboard WHERE Date BETWEEN DATEADD(DAY, -7, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC");
+
+    //Query om de scorelijst van deze maand op te halen.
+    var Monthquery = db.Query("SELECT * FROM Leaderboard WHERE Date BETWEEN DATEADD(DAY, -30, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC");
+
+    //Als er gezocht wordt naar de Username, gebruik deze query's.
+    if(!Request.QueryString["searchUser"].IsEmpty())
+    {
+        Todayquery = db.Query("SELECT * FROM Leaderboard WHERE Username = @0 AND Date = CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
+
+        Weekquery = db.Query("SELECT * FROM Leaderboard WHERE Username = @0 AND Date BETWEEN DATEADD(DAY, -7, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
+
+        Monthquery = db.Query("SELECT * FROM Leaderboard WHERE Username = @0 AND Date BETWEEN DATEADD(DAY, -30, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
+    }
+
+    //Als er gezocht wordt naar de Score, gebruik deze query's.
+    if (!Request.QueryString["searchScore"].IsEmpty())
+    {
+        Todayquery = db.Query("SELECT * FROM Leaderboard WHERE score = @0 AND Date = CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchScore"]);
+
+        Weekquery = db.Query("SELECT * FROM Leaderboard WHERE score = @0 AND Date BETWEEN DATEADD(DAY, -7, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchScore"]);
+
+        Monthquery = db.Query("SELECT * FROM Leaderboard WHERE score = @0 AND Date BETWEEN DATEADD(DAY, -30, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchScore"]);
+    }
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <link href='http://fonts.googleapis.com/css?family=Berkshire+Swash' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/Style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title> @Page.Title </title>
+
+</head>
+<body>
+    <div id="main">
+        <div id="background"></div>
+        <div id="fade">
+
+            <div class="Retbutton"><input type="button" class="Button" value="Return to the Homepage" onclick="location.href='Frontpage.cshtml';"> </div>
+            <div class="container text-center">
+
+                <h1 class="Logo">Leaderboards</h1>
+                <p> Here you'll find the daily, weekly and monthly highscores achieved by our users.</p>
+
+                <form method="get">
+                    <div class="container text-center">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p> Search your username:</p>
+                                <input type="text" name="searchUser" value="@Request.QueryString["searchUser"]" placeholder="Leave blank to list all Users...">
+                                <input type="Submit" value="Search User" />
+                            </div>
+                            <div class="col-sm-6">
+                                <p> Search Scores:</p>
+                                <input type="text" name="searchScore" value="@Request.QueryString["searchScore"]" placeholder="Leave blank to list all Scores...">
+                                <input type="Submit" value="Search Score" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="container-fluid fill-height">
+
+                <div class="row">
+
+                    <div class="col text-center">
+                        <p class="Reclame"> Put your advertisements here.</p>
+                    </div>
+
+                    <div class="col Content">
+
+                        <p> Highest Daily Scores:</p>
+                        <div id="table_wrapper">
+                            
+                            <div id="header">
+                                <div id="head1">Username</div>
+                                <div id="head2">Score</div>
+                            </div>
+                            
+                            <div id="tbody">
+                                <table class="table2">
+                                    
+                                    @foreach (var i in Todayquery)
+                                    {
+                                        <tr>
+                                            <td class="td1"> @i.username </td>
+                                            <td class="td2"> @i.score </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col Content">
+
+                        <p>Highest Weekly Scores:</p>
+                        
+                        <div id="table_wrapper">
+
+                            <div id="header">
+                                <div id="head1">Username</div>
+                                <div id="head2">Score</div>
+                            </div>
+
+                            <div id="tbody">
+                                <table class="table2">
+                                    
+                                    @foreach (var i in Weekquery)
+                                    {
+                                        <tr>
+                                            <td class="td1"> @i.username </td>
+                                            <td class="td2"> @i.score </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col Content">
+
+                        <p>Highest Monthly Scores:</p>
+                        <div id="table_wrapper">
+                            
+                            <div id="header">
+                                <div id="head1">Username</div>
+                                <div id="head2">Score</div>
+                            </div>
+                            
+                            <div id="tbody">
+                                <table class="table2">
+                                    
+                                    @foreach (var i in Monthquery)
+                                    {
+                                        <tr>
+                                            <td class="td1"> @i.username </td>
+                                            <td class="td2"> @i.score </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col text-center">
+                        <p class="Reclame"> Put your advertisements here.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

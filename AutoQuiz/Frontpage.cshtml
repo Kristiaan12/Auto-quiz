@@ -1,0 +1,110 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "Autoquiz";
+
+    //Maakt verbinding met de Database.
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+
+    string provider = "System.Data.SqlClient";
+
+    Database db = Database.OpenConnectionString(connectionString, provider);
+
+    //Query om de scorelijst van vandaag op te halen.
+    var Todayquery = db.Query("SELECT * FROM Leaderboard WHERE Date = CONVERT(date, getdate()) ORDER BY score DESC");
+
+    //Query om de scorelijst van deze maand op te halen.
+    var Monthquery = db.Query("SELECT * FROM Leaderboard WHERE Date BETWEEN DATEADD(DAY, -30, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC");
+
+    //Counters om 10 records te geven in de tabel.
+    int Tcount = 0;
+    int Mcount = 0;
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <link href='http://fonts.googleapis.com/css?family=Berkshire+Swash' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/Style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title> @Page.Title </title>
+
+</head>
+<body>
+    <div id="main">
+        <div id="background"></div>
+        <div id="fade"> <br /> <br /> <br /> <br />
+
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-sm-1 text-center">
+                        <p class="Reclame"> Put your advertisements here.</p>
+                    </div>
+                    <div class="col-sm-1 text-center Content">
+                        <h2> Today's Top Scores:</h2>
+                        <table class="table1">
+                            <tr>
+                                <th scope="col">Username: </th>
+                                <th scope="col">Highscore: </th>
+                            </tr>
+
+                            @foreach (var i in Todayquery)
+                            {
+                                <tr>
+                                    <td> @i.username </td>
+                                    <td> @i.score </td>
+                                </tr>
+                                Tcount++;
+                                if (Tcount == 10)
+                                {
+                                    break;
+                                }
+                            }
+
+                        </table>
+                    </div>
+
+                    <div class="col-sm-8 text-center Content">
+
+                        <h1 class="Logo-klein"> Welcome to the </h1>
+                        <h1 class="Logo"> Cars Quiz!</h1> <br>
+                        <p> So you think you know a lot about cars? <br> Test your knowledge in this Quiz!</p> <br> <br>
+
+                        <input type="button" class="Button" value="Play the Quiz!" onclick="location.href='Username.cshtml';"> <br> <br>
+                        <input type="button" class="Button" value="Leaderboards" onclick="location.href='Leaderboards.cshtml';"> <br> <br>
+                    </div>
+
+                    <div class="col-sm-1 text-center Content">
+
+                        <h2> Highest Monthly Scores:</h2>
+                        <table class="table1">
+                            <tr>
+                                <th scope="col">Username: </th>
+                                <th scope="col">Highscore: </th>
+                            </tr>
+                            @foreach (var i in Monthquery)
+                            {
+                                <tr>
+                                    <td> @i.username </td>
+                                    <td> @i.score </td>
+                                </tr>
+                                Mcount++;
+                                if (Mcount == 10)
+                                {
+                                    break;
+                                }
+                            }
+                        </table>
+                    </div>
+                    <div class="col-sm-1 text-center">
+                        <p class="Reclame"> Put your advertisements here.</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

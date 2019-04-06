@@ -1,0 +1,84 @@
+﻿@using WebMatrix.Data;
+@{
+
+    var title = "";  //Title
+    var genre = "";   //Genre
+    var year = "";   // Year
+    var movieId = ""; // MovieId
+    var nameCar = "";
+    var photoCar = "";
+    var niveauCar = "";
+    var carId = "";
+
+    if (!IsPost)
+    {
+        if (!Request.QueryString["Id"].IsEmpty() && Request.QueryString["Id"].IsInt())
+        {
+            carId = Request.QueryString["Id"];
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+            string provider = "System.Data.SqlClient";
+            Database db = Database.OpenConnectionString(connectionString, provider);
+            var dbCommand = "SELECT * FROM Brand WHERE ID = @0";
+            var row = db.QuerySingle(dbCommand, carId);
+            if (row != null)
+            {
+                nameCar = row.Name;
+                photoCar = row.Photo;
+
+            }
+            else
+            {
+                Validation.AddFormError("No movie was found for that ID.");
+            }
+        }
+        else
+        {
+            Validation.AddFormError("No movie was found for that ID.");
+        }
+    }
+
+    if (IsPost && !Request["buttonDelete"].IsEmpty())
+    {
+        carId = Request.Form["carId"];
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+        string provider = "System.Data.SqlClient";
+        Database db = Database.OpenConnectionString(connectionString, provider);
+        var deleteCommand = "DELETE FROM Brand WHERE ID = @0";
+        db.Execute(deleteCommand, carId);
+        Response.Redirect("~/Beheer");
+    }
+}
+<html>
+
+<body>
+    <h2>
+       Merk verwijderen</<h2>
+
+            @Html.ValidationSummary()
+
+            <form method="post">
+                <fieldset>
+                    <legend>Merk info</legend>
+
+                    <p>
+                        <span>Merk naam:</span>
+                        <span>@nameCar</span>
+                    </p>
+
+                    <p>
+                        <span>Foto url:</span>
+                        <span>@photoCar</span>
+                    </p>
+
+                    <p>
+                        <span>Niveau merk:</span>
+                        <span>@niveauCar</span>
+                    </p>
+
+                    <input type="hidden" name="carId" value="@carId" />
+                    <p><input type="submit" name="buttonDelete" value="Verwijder" /></p>
+                </fieldset>
+                <p><a href="~/Beheer.cshtml">Terug naar beheer</a></p>
+            </form>
+</body>
+</html>

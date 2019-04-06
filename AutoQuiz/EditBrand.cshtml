@@ -1,0 +1,89 @@
+﻿@using WebMatrix.Data;
+@{
+
+
+    var nameCar = "";
+    var photoCar = "";
+    var niveauCar = "";
+    var carId = "";
+  
+
+    if (!IsPost)
+    {
+        if (!Request.QueryString["Id"].IsEmpty() && Request.QueryString["Id"].IsInt())
+        {
+            carId = Request.QueryString["Id"];
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+            string provider = "System.Data.SqlClient";
+            Database db = Database.OpenConnectionString(connectionString, provider);
+            var dbCommand = "SELECT * FROM Brand WHERE Id = @0";
+            var row = db.QuerySingle(dbCommand, carId);
+
+            if (row != null)
+            {
+                nameCar = row.Name;
+                photoCar = row.Photo;
+                niveauCar = row.Niveau;
+            }
+            else
+            {
+                Validation.AddFormError("Geen merk geselecteerd");
+            }
+        }
+        else
+        {
+            Validation.AddFormError("Geen merk geselecteerd");
+        }
+    }
+
+    if (IsPost)
+    {
+        Validation.RequireField("Name", "Naam mag niet leeg zijn");
+        Validation.RequireField("Photo", "Foto mag niet leeg zijn");
+        Validation.RequireField("Niveau", "Niveau is verplicht");
+        Validation.RequireField("Id", "No movie ID was submitted!");
+
+        nameCar = Request.Form["Name"];
+        photoCar = Request.Form["Photo"];
+        niveauCar = Request.Form["Niveau"];
+        carId = Request.Form["Id"];
+
+        if (Validation.IsValid())
+        {
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+            string provider = "System.Data.SqlClient";
+            Database db = Database.OpenConnectionString(connectionString, provider);
+            var updateCommand = "UPDATE Brand SET Name=@0, Photo=@1, Niveau=@2 WHERE Id=@3";
+            db.Execute(updateCommand, nameCar, photoCar, niveauCar, carId);
+            Response.Redirect("~/Beheer");
+        }
+    }
+}
+
+
+<h2>Edit a Movie</h2>
+@Html.ValidationSummary()
+<form method="post">
+    <fieldset>
+        <legend>Movie Information</legend>
+        <p>
+            <label for="title">Merk naam:</label>
+            <input type="text" name="Name" value="@nameCar" />
+        </p>
+        <p>
+            <label for="genre">Foto url:</label>
+            <input type="text" name="Photo" value="@photoCar" />
+        </p>
+        <p>
+            <label for="year">Niveau merk:</label>
+            <select class="form-control" name="Niveau" value="@niveauCar">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+            </select>
+        </p>
+        <input type="hidden" name="Id" value="@carId" />
+        <p><input type="submit" name="buttonSubmit" value="Submit Changes" /></p>
+    </fieldset>
+</form>
+<p><a href="~/Movies">Return to movie listing</a></p>

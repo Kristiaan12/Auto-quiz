@@ -1,0 +1,135 @@
+﻿@{
+    var voornaam = "";
+
+    string een = Request.QueryString["een"];
+    string twee = Request.QueryString["twee"];
+    string drie = Request.QueryString["drie"];
+    string vier = Request.QueryString["vier"];
+    string vijf = Request.QueryString["vijf"];
+    string zes = Request.QueryString["zes"];
+    string zeven = Request.QueryString["zeven"];
+    string acht = Request.QueryString["acht"];
+    string negen = Request.QueryString["negen"];
+    string tien = Request.QueryString["tien"];
+
+
+    var lijstAntwoord = (List<string>)Session["antwoorden"];
+    string[] antwoordenArray = lijstAntwoord.ToArray();
+
+
+
+
+    int score = 0;
+
+
+
+}
+
+<h2>Gegeven antwoorden</h2>
+@een
+@twee
+@drie
+@vier
+@vijf
+@zes
+@zeven
+@acht
+@negen
+@tien
+
+
+<h2>
+    ANTWOORDEN
+</h2>
+
+@foreach (object o in lijstAntwoord)
+{
+    @o;
+}
+<br />
+@antwoordenArray
+
+
+@if (een == antwoordenArray[0])
+{
+
+    score++;
+
+}
+
+@if (twee == antwoordenArray[1])
+{
+
+    score++;
+}
+
+@if (drie == antwoordenArray[2])
+{
+
+    score++;
+}
+
+@if (vier == antwoordenArray[3])
+{
+
+    score++;
+}
+
+@if (vijf == antwoordenArray[4])
+{
+
+    score++;
+}
+
+@if (zes == antwoordenArray[5])
+{
+
+    score++;
+}
+
+@if (zeven == antwoordenArray[6])
+{
+
+    score++;
+}
+@if (acht == antwoordenArray[7])
+{
+
+    score++;
+}
+@if (negen == antwoordenArray[8])
+{
+
+    score++;
+}
+@if (tien == antwoordenArray[9])
+{
+
+    score++;
+}
+
+
+
+
+<form method="post">
+    <fieldset>
+        <legend>Verstuur score</legend>
+        <p>
+            <input class="form-control" type="text" name="voornaam" value="@Request.Form["voornaam"]" placeholder="Voornaam" />
+            @Html.ValidationMessage("voornaam")
+
+        <p><input type="submit" name="buttonSubmit" value="Verzend " class="btn btn-block btn-lg btn-primary" /></p>
+    </fieldset>
+</form>
+
+@if (IsPost)
+    {
+
+        voornaam = Request.Form["voornaam"];
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+        string provider = "System.Data.SqlClient";
+        Database db = Database.OpenConnectionString(connectionString, provider);
+        var insertCommand = "INSERT INTO Leaderboard (Name, Score) Values(@0, @1)";
+        db.Execute(insertCommand, voornaam, score);
+        Response.Redirect("~/Test");
+        }

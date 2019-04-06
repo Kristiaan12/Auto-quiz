@@ -1,0 +1,54 @@
+﻿@using System.Activities.Statements
+@using WebMatrix.Data
+@{
+    Page.Title = "Admin login pagina";
+    Validation.RequireField("Name", "Username required");
+    Validation.RequireField("Wachtwoord", "Password required");
+
+    if (IsPost && Validation.IsValid())
+    {
+        var Name = Request.Form["Name"];
+        var Wachtwoord = Request.Form["Wachtwoord"];
+
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+
+        string provider = "System.Data.SqlClient";
+
+        Database db = Database.OpenConnectionString(connectionString, provider);
+        var qResult = db.Query("SELECT * From Admin WHERE Name = @0 AND Wachtwoord = @1", Name , Wachtwoord);
+        if (qResult.Any())
+        {
+
+            Session["Name"] = Name;
+            Response.Redirect("Beheer.cshtml");
+
+        }
+    }
+}
+<!-- MAIN PAGE -->
+<section id="page" class="contact">
+    <div class="container">
+        <div class="row center-xs center-sm center-md center-lg">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h2><span class="primary-text">Let's make this</span> a Special Day</h2>
+                <p>
+                    Vul dit formulier in om in te loggen.
+                </p>
+                <form method="post">
+                    <div>
+                        <label for="Name">Gebruikersnaam</label><br>
+                        <input type="text" name="Name" value="@Request.Form["Name"]" required>
+                        @Html.ValidationMessage("Name")
+                    </div>
+                    <div>
+                        <label for="Wachtwoord">Wachtwoord</label><br>
+                        <input type="Wachtwoord" name="Wachtwoord" value="@Request.Form["Wachtwoord"]" required>
+                        @Html.ValidationMessage("Wachtwoord")
+                    </div>
+
+                    <button type="submit" name="button" value="LogIn">Inloggen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

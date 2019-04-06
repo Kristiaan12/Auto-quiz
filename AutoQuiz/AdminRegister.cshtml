@@ -1,0 +1,56 @@
+﻿@using WebMatrix.Data
+@{
+    Page.Title = "Registreer uw account"; /*INSERT NAAM HIER*/
+
+    Layout = "~/_SiteLayout.cshtml"; /*INSERT LAYOUT NAAM HIER*/
+
+
+    Validation.RequireField("Name", "Enter A Name Here");
+    Validation.RequireField("Wachtwoord", "Enter A Wachtwoord Here");
+
+
+    if (IsPost && Validation.IsValid())
+
+    {
+        var Name = Request.Form["Name"];
+        var Wachtwoord = Request.Form["Wachtwoord"];
+
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+        string provider = "System.Data.SqlClient";
+        Database db = Database.OpenConnectionString(connectionString, provider);
+        var insertCommand = "INSERT INTO Admin (Name, Wachtwoord) Values(@0, @1)";
+        db.Execute(insertCommand, Name, Wachtwoord);
+        Response.Redirect("AdminLogin/");
+    }
+
+}
+
+<!-- MAIN PAGE -->
+<section id="page" class="contact">
+    <div class="container">
+        <div class="row center-xs center-sm center-md center-lg">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h2><span class="primary-text">Let's make this</span> a Special Day</h2>
+                <p>
+                    Vul dit formulier in om uw account aan te maken.<br>
+                    Nadat uw account is aangemaakt, Word u doorgestuurd naar de login pagina voor de admins.
+                </p>
+                <form method="post">
+                    <div>
+                        <label for="name">Gebruikersnaam</label><br>
+                        <input type="text" name="name" value="@Request.Form["name"]" required>
+                        @Html.ValidationMessage("name")
+                    </div>
+                    <div>
+                        <label for="wachtwoord">Naam</label><br>
+                        <input type="text" name="wachtwoord" value="@Request.Form["wachtwoord"]" required>
+                        @Html.ValidationMessage("wachtwoord")
+                    </div>
+
+
+                    <button type="submit" name="button" value="NieuwAccount">Registreer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

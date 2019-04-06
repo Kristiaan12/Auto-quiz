@@ -1,0 +1,132 @@
+﻿@using WebMatrix.Data;
+@{
+    string antwoord0 = Request.Form["een"];
+    string antwoord2 = Request.Form["twee"];
+    string antwoord3 = Request.Form["drie"];
+    string antwoord4 = Request.Form["vier"];
+    string antwoord5 = Request.Form["vijf"];
+    string antwoord6 = Request.Form["zes"];
+    string antwoord7 = Request.Form["zeven"];
+    string antwoord8 = Request.Form["acht"];
+    string antwoord9 = Request.Form["negen"];
+    string antwoord10 = Request.Form["tien"];
+
+    string een = Request.QueryString["een"];
+    string twee = Request.QueryString["twee"];
+    string drie = Request.QueryString["drie"];
+    string vier = Request.QueryString["vier"];
+    string vijf = Request.QueryString["vijf"];
+    string zes = Request.QueryString["zes"];
+    string zeven = Request.QueryString["zeven"];
+    string acht = Request.QueryString["acht"];
+    string negen = Request.QueryString["negen"];
+    string tien = Request.QueryString["tien"];
+
+    string[] inputFinal = new string[10] {een, twee, drie, vier, vijf, zes, zeven, acht, negen, tien};
+
+    int countarray = 0;
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+    string provider = "System.Data.SqlClient";
+    Database db = Database.OpenConnectionString(connectionString, provider);
+    var imagePath = "";
+    if (Request["brandPhoto"] != null)
+    {
+        imagePath = @"Images\brands\" + Request["brandPhoto"];
+    }
+    var brand = db.Query("SELECT top 10 Id, Photo, Name, Niveau FROM Brand ORDER BY NEWID()");
+    var brandid = db.Query("SELECT top 1 Id FROM Brand ORDER BY NEWID()");
+
+
+    string[] inputArray = new string[] { "een", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen", "tien" };
+
+    List<string> lijstAntwoord = new List<string>();
+    Session["antwoorden"] = lijstAntwoord;
+
+
+
+
+
+    foreach (var brandq in brand)
+    {
+        lijstAntwoord.Add(brandq.Name);
+    }
+
+    //Session["brandid"] = Request.QueryString["brand_id"];
+
+    Layout = "_SiteLayout.cshtml";
+
+
+    int count = 0;
+
+}
+<script src="~/Content/quizjs.js"></script>
+
+
+<form method="get" id="quizForm" action="~/Score.cshtml/?@inputFinal/@lijstAntwoord">
+
+    @foreach (var image in brand)
+    {
+        var antwoord1 = db.Query("SELECT * FROM Brand ORDER BY newid()");
+        <div class="tab">
+            <img src="@image.Photo" height="250" width="250"><br />
+            <div class="quiz" id="quiz" data-toggle="buttons">
+                <label class="element-animation1 btn btn-lg btn-primary btn-block">
+                    <span class="btn-label">
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </span> <input class="quizbttn" type="radio" name=" @inputArray[countarray]" value=" @image.Name"> <p> @image.Name</p>
+                </label>
+            </div>
+
+            @foreach (var antwoord in antwoord1)
+            {
+                count++;
+                if (count < 4 && image.name != antwoord.Name)
+                {
+                    <div class="quiz" id="quiz" data-toggle="buttons">
+                        <label class="element-animation1 btn btn-lg btn-primary btn-block">
+                            <span class="btn-label">
+                                <i class="glyphicon glyphicon-chevron-right"></i>
+                            </span>
+                            <input type="radio" class="quizbttn" name=" @inputArray[countarray]" value="@antwoord.Name"> <p>@antwoord.Name</p>
+                        </label>
+                    </div>
+                }
+            }
+            @if (count >= 4)
+            {
+                count = 0;
+                countarray++;
+            }
+        </div>
+    }
+    <div style="overflow:auto;">
+        <div style="float:right;">
+            <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+            <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+        </div>
+    </div>
+    <input type="submit" name="submit" value="Verzend">
+</form>
+<h2> Goede antwoorden</h2>
+@foreach (object o in lijstAntwoord)
+{
+    @o;
+}
+<br>
+<h2> array</h2>
+@foreach (object input in inputFinal)
+{
+    @input
+}
+<br />
+<h2>Gegeven antwoorden</h2>
+@een
+@twee
+@drie
+@vier
+@vijf
+@zes
+@zeven
+@acht
+@negen
+@tien

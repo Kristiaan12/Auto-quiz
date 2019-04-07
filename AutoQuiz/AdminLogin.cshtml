@@ -18,8 +18,8 @@
         var qResult = db.Query("SELECT * From Admin WHERE Name = @0 AND Wachtwoord = @1", Name, Wachtwoord);
         if (qResult.Any())
         {
-
-            Session["Name"] = Name;
+           
+           
             Response.Redirect("Beheer.cshtml");
 
         }

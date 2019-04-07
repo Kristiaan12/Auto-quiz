@@ -15,7 +15,7 @@
         string provider = "System.Data.SqlClient";
 
         Database db = Database.OpenConnectionString(connectionString, provider);
-        var qResult = db.Query("SELECT * From Admin WHERE Name = @0 AND Wachtwoord = @1", Name , Wachtwoord);
+        var qResult = db.Query("SELECT * From Admin WHERE Name = @0 AND Wachtwoord = @1", Name, Wachtwoord);
         if (qResult.Any())
         {
 
@@ -25,12 +25,11 @@
         }
     }
 }
-<!-- MAIN PAGE -->
-<section id="page" class="contact">
+<link rel="stylesheet" href="~/Content/Style.css">
+<center>
     <div class="container">
         <div class="row center-xs center-sm center-md center-lg">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h2><span class="primary-text">Let's make this</span> a Special Day</h2>
                 <p>
                     Vul dit formulier in om in te loggen.
                 </p>
@@ -42,13 +41,12 @@
                     </div>
                     <div>
                         <label for="Wachtwoord">Wachtwoord</label><br>
-                        <input type="Wachtwoord" name="Wachtwoord" value="@Request.Form["Wachtwoord"]" required>
+                        <input type="password" name="Wachtwoord" value="@Request.Form["Wachtwoord"]" required>
                         @Html.ValidationMessage("Wachtwoord")
                     </div>
-
-                    <button type="submit" name="button" value="LogIn">Inloggen</button>
+                    <button class="Button" type="submit" name="button" value="LogIn">Inloggen</button>
                 </form>
             </div>
         </div>
     </div>
-</section>
+</center>

@@ -34,7 +34,7 @@
 </head>
 <body>
     <div id="main">
-        <div id="background"></div>
+     
         <div id="fade"> <br /> <br /> <br /> <br />
 
             <div class="container">
@@ -54,7 +54,7 @@
                             @foreach (var i in Todayquery)
                             {
                                 <tr>
-                                    <td> @i.username </td>
+                                    <td> @i.Name </td>
                                     <td> @i.score </td>
                                 </tr>
                                 Tcount++;
@@ -73,7 +73,7 @@
                         <h1 class="Logo"> Cars Quiz!</h1> <br>
                         <p> So you think you know a lot about cars? <br> Test your knowledge in this Quiz!</p> <br> <br>
 
-                        <input type="button" class="Button" value="Play the Quiz!" onclick="location.href='Username.cshtml';"> <br> <br>
+                        <input type="button" class="Button" value="Play the Quiz!" onclick="location.href='Test.cshtml';"> <br> <br>
                         <input type="button" class="Button" value="Leaderboards" onclick="location.href='Leaderboards.cshtml';"> <br> <br>
                     </div>
 
@@ -88,7 +88,7 @@
                             @foreach (var i in Monthquery)
                             {
                                 <tr>
-                                    <td> @i.username </td>
+                                    <td> @i.Name </td>
                                     <td> @i.score </td>
                                 </tr>
                                 Mcount++;

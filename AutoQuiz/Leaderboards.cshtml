@@ -21,11 +21,11 @@
     //Als er gezocht wordt naar de Username, gebruik deze query's.
     if(!Request.QueryString["searchUser"].IsEmpty())
     {
-        Todayquery = db.Query("SELECT * FROM Leaderboard WHERE Username = @0 AND Date = CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
+        Todayquery = db.Query("SELECT * FROM Leaderboard WHERE Name = @0 AND Date = CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
 
-        Weekquery = db.Query("SELECT * FROM Leaderboard WHERE Username = @0 AND Date BETWEEN DATEADD(DAY, -7, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
+        Weekquery = db.Query("SELECT * FROM Leaderboard WHERE Name = @0 AND Date BETWEEN DATEADD(DAY, -7, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
 
-        Monthquery = db.Query("SELECT * FROM Leaderboard WHERE Username = @0 AND Date BETWEEN DATEADD(DAY, -30, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
+        Monthquery = db.Query("SELECT * FROM Leaderboard WHERE Name = @0 AND Date BETWEEN DATEADD(DAY, -30, getdate()) AND CONVERT(date, getdate()) ORDER BY score DESC", Request.QueryString["searchUser"]);
     }
 
     //Als er gezocht wordt naar de Score, gebruik deze query's.
@@ -53,7 +53,7 @@
 </head>
 <body>
     <div id="main">
-        <div id="background"></div>
+     
         <div id="fade">
 
             <div class="Retbutton"><input type="button" class="Button" value="Return to the Homepage" onclick="location.href='Frontpage.cshtml';"> </div>
@@ -104,7 +104,7 @@
                                     @foreach (var i in Todayquery)
                                     {
                                         <tr>
-                                            <td class="td1"> @i.username </td>
+                                            <td class="td1"> @i.Name </td>
                                             <td class="td2"> @i.score </td>
                                         </tr>
                                     }
@@ -130,7 +130,7 @@
                                     @foreach (var i in Weekquery)
                                     {
                                         <tr>
-                                            <td class="td1"> @i.username </td>
+                                            <td class="td1"> @i.Name </td>
                                             <td class="td2"> @i.score </td>
                                         </tr>
                                     }
@@ -155,7 +155,7 @@
                                     @foreach (var i in Monthquery)
                                     {
                                         <tr>
-                                            <td class="td1"> @i.username </td>
+                                            <td class="td1"> @i.Name </td>
                                             <td class="td2"> @i.score </td>
                                         </tr>
                                     }

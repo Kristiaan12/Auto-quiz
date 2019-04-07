@@ -22,7 +22,7 @@
     string negen = Request.QueryString["negen"];
     string tien = Request.QueryString["tien"];
 
-    string[] inputFinal = new string[10] {een, twee, drie, vier, vijf, zes, zeven, acht, negen, tien};
+    string[] inputFinal = new string[10] { een, twee, drie, vier, vijf, zes, zeven, acht, negen, tien };
 
     int countarray = 0;
     string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
@@ -61,9 +61,7 @@
 }
 <script src="~/Content/quizjs.js"></script>
 
-
 <form method="get" id="quizForm" action="~/Score.cshtml/?@inputFinal/@lijstAntwoord">
-
     @foreach (var image in brand)
     {
         var antwoord1 = db.Query("SELECT * FROM Brand ORDER BY newid()");
@@ -73,10 +71,9 @@
                 <label class="element-animation1 btn btn-lg btn-primary btn-block">
                     <span class="btn-label">
                         <i class="glyphicon glyphicon-chevron-right"></i>
-                    </span> <input class="quizbttn" type="radio" name=" @inputArray[countarray]" value=" @image.Name"> <p> @image.Name</p>
+                    </span> <input  class="quizbttn"  type="radio" name=" @inputArray[countarray]" value=" @image.Name"> <p> @image.Name</p>
                 </label>
             </div>
-
             @foreach (var antwoord in antwoord1)
             {
                 count++;
@@ -107,26 +104,3 @@
     </div>
     <input type="submit" name="submit" value="Verzend">
 </form>
-<h2> Goede antwoorden</h2>
-@foreach (object o in lijstAntwoord)
-{
-    @o;
-}
-<br>
-<h2> array</h2>
-@foreach (object input in inputFinal)
-{
-    @input
-}
-<br />
-<h2>Gegeven antwoorden</h2>
-@een
-@twee
-@drie
-@vier
-@vijf
-@zes
-@zeven
-@acht
-@negen
-@tien

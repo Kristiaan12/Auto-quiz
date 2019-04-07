@@ -41,7 +41,6 @@
 <h2>
     ANTWOORDEN
 </h2>
-
 @foreach (object o in lijstAntwoord)
 {
     @o;
@@ -108,28 +107,64 @@
     score++;
 }
 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Berkshire+Swash' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/Style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title> @Page.Title </title>
+</head>
+<body>
+    <div id="main">
+        <div id="background"></div>
+        <div id="fade">
+            <div class="container text-center Content">
+                <h2>Provide a username.</h2> <br>
+                <p>Provide us with a username so we can save your score on the leaderboards!</p> <br> <br>
+                <form method="post">
+                    <fieldset>
+                        <p>
+                            <input class="form-control" type="text" name="voornaam" value="@Request.Form["voornaam"]" placeholder="Name" />
+                            @Html.ValidationMessage("voornaam")
+                        <p><input type="submit" name="buttonSubmit" value="Send" class="btn btn-block btn-lg btn-primary" /></p>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
 
 
 
-<form method="post">
-    <fieldset>
-        <legend>Verstuur score</legend>
-        <p>
-            <input class="form-control" type="text" name="voornaam" value="@Request.Form["voornaam"]" placeholder="Voornaam" />
-            @Html.ValidationMessage("voornaam")
-
-        <p><input type="submit" name="buttonSubmit" value="Verzend " class="btn btn-block btn-lg btn-primary" /></p>
-    </fieldset>
-</form>
 
 @if (IsPost)
-    {
+{
+  
 
-        voornaam = Request.Form["voornaam"];
-        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
-        string provider = "System.Data.SqlClient";
-        Database db = Database.OpenConnectionString(connectionString, provider);
-        var insertCommand = "INSERT INTO Leaderboard (Name, Score) Values(@0, @1)";
-        db.Execute(insertCommand, voornaam, score);
-        Response.Redirect("~/Test");
-        }
+
+}
+
+
+@if (IsPost)
+{
+
+    var date = @DateTime.Now;
+    var sqlFormattedDate = @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+    DateTime.Now.Date.ToString("yyyy-MM-dd HH:mm:ss");
+
+
+
+    voornaam = Request.Form["voornaam"];
+    string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\AutoDB.mdf;Integrated Security=True";
+    string provider = "System.Data.SqlClient";
+    Database db = Database.OpenConnectionString(connectionString, provider);
+    var insertCommand = "INSERT INTO Leaderboard (Name, Score, Date) Values(@0, @1, @2)";
+    db.Execute(insertCommand, voornaam, score, date);
+    Response.Redirect("~/Leaderboards.cshtml");
+}
+
+
